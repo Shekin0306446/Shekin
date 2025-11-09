@@ -49,11 +49,11 @@ fall 2025
 -	Assisting in the integration of an AI-driven assistant that provides personalized diet plans, budget-friendly cooking suggestions, and guidance on food-related inquiries.
 -	Promoting sustainability and food security through innovative digital solutions.
   
-**Research Interests**
+## **Research Interests**
 -	AI & Automation: Explored the impact of artificial intelligence on the job market and workforce automation trends. 
 -	Machine Learning & NLP: Interested in real-time speech processing, translation, and AIdriven applications. 
   
-**Additional Skills**
+## **Additional Skills**
 -	Graphic Design (Adobe Creative Suite) 
 -	Web Development (HTML, CSS, JavaScript, WordPress) 
 -	AI & ML Frameworks (TensorFlow, PyTorch, NLTK) 
@@ -71,7 +71,4 @@ Available upon request.
 
 **Portfolio:** Add your portfolio link here once uploaded
 
-**GitHub:** Add your username here
-
-
-
+**GitHub:** Shekin
