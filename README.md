@@ -1,16 +1,17 @@
 ## Resume 
 ## Hi, I’m Shekin David Raj  
  
-**Objective** 
+## **Objective** 
+
 Enthusiastic third-year Computer Science student at Acadia University seeking a co-op opportunity to apply programming, web development, and AI research skills. Passionate about software engineering, AI applications, and building solutions that create community impact. 
   
-**Education** 
+## **Education** 
 - Bachelor of Science in Computer Science 
 - Acadia University – Wolfville, NS 
 - Expected Graduation: May 2027 | Current Year: 3rd | GPA: 2.999 
 - Relevant Coursework: Data Structures & Algorithms, Database Systems, Software Engineering, Operating Systems, Artificial Intelligence, Full stack. 
   
-**Technical Skills** 
+## **Technical Skills** 
 - Programming Languages: Java, C, C++, Python, SQL, JavaScript, HTML/CSS 
 - Frameworks & Tools: React, Node.js, Flask, Android Studio, Git/GitHub 
 - Databases: MySQL, PostgreSQL 
