@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Enactus FoodShare — Kitchen Management</title>
+  <style>
+   :root {
+    --accent: #ffcc33; /* Mustard yellow */
+    --bg: #1a1a1a; /* Soft black background */
+    --text-light: #f5f5f5;
+    --card-bg: #2a2a2a;
+    --muted: #aaa;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-light);
+    background: linear-gradient(180deg, #1a1a1a 0%, #222222 100%);
+  }
+
+  header {
+    background: #000;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.5);
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 20px;
+    color: var(--accent);
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 24px auto;
+    padding: 0 18px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 18px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+  }
+
+  nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  nav button {
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--text-light);
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.3s;
+  }
+
+  nav button:hover {
+    background: rgba(255, 204, 51, 0.15);
+  }
+
+  nav button.active {
+    background: var(--accent);
+    color: #000;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--text-light);
+  }
+
+  th, td {
+    padding: 8px;
+    border-bottom: 1px solid #444;
+    text-align: left;
+    font-size: 14px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    margin-top: 10px;
+    color: var(--muted);
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background: #1f1f1f;
+    color: var(--text-light);
+    margin-top: 6px;
+  }
+
+  .btn {
+    background: var(--accent);
+    color: #000;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 0;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+  }
+
+  .btn:hover {
+    background: #ffd84d;
+  }
+
+  .small { font-size: 13px; color: var(--muted); }
+
+  .alert {
+    padding: 10px;
+    border-radius: 8px;
+    background: rgba(255, 204, 51, 0.1);
+    color: var(--accent);
+  }
+
+  .stat-grid {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .stat {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #333, #2a2a2a);
+    text-align: center;
+    border: 1px solid #444;
+  }
+
+  .muted { color: var(--muted); }
+
+  footer {
+    max-width: 1100px;
+    margin: 28px auto;
+    padding: 0 18px;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid #333;
+    text-align: center;
+    padding-top: 12px;
+  }
+
+  @media(max-width:900px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+  .bg-wrapper {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Background image with blur */
+.bg-wrapper::before {
+  content: "";
+  position: fixed; /* stays behind while scrolling */
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: url("https://i.pinimg.com/736x/14/4a/6c/144a6c9567cd5d69998d0f29bb4e89b5.jpg") no-repeat center center;
+  background-size: cover;
+  filter: blur(12px) brightness(0.6); /* soft blur and slight dark overlay */
+  z-index: -1;
+}
+
+/* Ensure content is above the background */
+.container, header {
+  position: relative;
+  z-index: 1;
+}
+
+</style>
+</head>
+<body>
+  <div class="bg-wrapper">
+  <header>
+  <img src="logo.jpeg" alt="FoodShare Logo" style="height:55px; width:auto;">
+  <h1>Enactus FoodShare Kitchen Management</h1>
+</header>
+<div style="height:4px;background:linear-gradient(90deg,#ffcc33,#ffb300,#ffcc33);box-shadow:0 0 10px #ffcc33;"></div>
+
+  <div class="container">
+    <div class="card" style="margin-bottom:12px">
+      <nav id="mainNav">
+        <button data-view="dashboard" class="active">Dashboard</button>
+        <button data-view="inventory">Inventory</button>
+        <button data-view="recipes">Recipes</button>
+        <button data-view="volunteers">Volunteers</button>
+        <button data-view="donations">Donations</button>
+        <button data-view="nutrition">Nutrition</button>
+        <button data-view="settings">Settings</button>
+      </nav>
+    </div>
+
+    <div class="grid">
+      <div>
+        <!-- Views: content swaps by JS -->
+        <section id="view-dashboard" class="card view">
+          <h3>Impact Dashboard</h3>
+          <div class="stat-grid">
+            <div class="stat">
+              <div class="small">Meals Served</div>
+              <div id="statMeals" style="font-size:22px;font-weight:700">0</div>
+            </div>
+            <div class="stat">
+              <div class="small">Food Saved (kg)</div>
+              <div id="statSaved" style="font-size:22px;font-weight:700">0</div>
+            </div>
+            <div class="stat">
+              <div class="small">Active Volunteers</div>
+              <div id="statVols" style="font-size:22px;font-weight:700">0</div>
+            </div>
+          </div>
+
+          <h4 style="margin-top:16px">Expiry Alerts</h4>
+          <div id="expiryAlerts"></div>
+
+          <h4 style="margin-top:16px">Recent Activity</h4>
+          <div id="recentActivity" class="small muted">No activity yet.</div>
+        </section>
+
+        <section id="view-inventory" class="card view" style="display:none">
+          <h3>Inventory & Waste Tracking</h3>
+          <form id="formAddItem">
+            <label>Item name <input id="itemName" required></label>
+            <label>Category <select id="itemCat"><option>Vegetable</option><option>Fruit</option><option>Dairy</option><option>Grain</option><option>Protein</option><option>Other</option></select></label>
+            <label>Quantity (units) <input id="itemQty" type="number" min="0" step="1" value="1"></label>
+            <label>Estimate Weight (kg) <input id="itemWeight" type="number" min="0" step="0.01" value="0.1"></label>
+            <label>Expiry Date <input id="itemExpiry" type="date"></label>
+            <div style="display:flex;gap:8px;margin-top:10px"><button class="btn" type="submit">Add / Update</button> <button id="clearInventory" type="button">Clear All (dev)</button></div>
+          </form>
+
+          <h4 style="margin-top:14px">Inventory List</h4>
+          <table id="inventoryTable">
+            <thead><tr><th>Item</th><th>Cat</th><th>Qty</th><th>Weight(kg)</th><th>Expiry</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </section>
+
+        <section id="view-recipes" class="card view" style="display:none">
+          <h3>Recipe Suggestions</h3>
+          <div class="small">Select available items (auto-filled from inventory) and get quick recipe ideas optimized for nutrition and low waste.</div>
+
+          <div id="ingredientList" style="margin-top:10px"></div>
+          <button id="suggestRecipes" class="btn" style="margin-top:10px">Suggest Recipes</button>
+
+          <h4 style="margin-top:12px">Suggested Recipes</h4>
+          <div id="recipesOut" class="small muted">No suggestions yet.</div>
+        </section>
+
+        <section id="view-volunteers" class="card view" style="display:none">
+          <h3>Volunteer & Task Scheduling</h3>
+          <form id="formVolunteer">
+            <label>Name <input id="volName"></label>
+            <label>Role <select id="volRole"><option>Cook</option><option>Packager</option><option>Delivery</option><option>Admin</option></select></label>
+            <label>Shift Date <input id="volDate" type="date"></label>
+            <label>Notes <input id="volNotes"></label>
+            <div style="margin-top:10px"><button class="btn" type="submit">Add Volunteer Shift</button></div>
+          </form>
+
+          <h4 style="margin-top:12px">Scheduled Shifts</h4>
+          <table id="volTable"><thead><tr><th>Name</th><th>Role</th><th>Date</th><th>Notes</th><th>Action</th></tr></thead><tbody></tbody></table>
+        </section>
+
+        <section id="view-donations" class="card view" style="display:none">
+          <h3>Donation Portal</h3>
+          <form id="formDonation">
+            <label>Donor Name / Business <input id="donorName"></label>
+            <label>Item Description <input id="donDesc"></label>
+            <label>Quantity <input id="donQty" type="number" min="1" value="1"></label>
+            <label>Estimated Weight (kg) <input id="donWeight" type="number" min="0" step="0.01" value="1"></label>
+            <label>Pickup/Dropoff Date <input id="donDate" type="date"></label>
+            <div style="margin-top:10px"><button class="btn" type="submit">Log Donation</button></div>
+          </form>
+
+          <h4 style="margin-top:12px">Donations Log</h4>
+          <table id="donTable"><thead><tr><th>Donor</th><th>Item</th><th>Qty</th><th>Weight(kg)</th><th>Date</th></tr></thead><tbody></tbody></table>
+        </section>
+
+        <section id="view-nutrition" class="card view" style="display:none">
+          <h3>Nutrition & Meal Planning</h3>
+          <div class="small">Quick nutrition summary and a simple meal planner to craft balanced meals from available ingredients.</div>
+
+          <label>Target audience <select id="planAudience"><option>General</option><option>Children</option><option>Elderly</option><option>Diabetic-friendly</option><option>Vegan</option></select></label>
+          <div style="margin-top:10px"><button id="generateMeal" class="btn">Generate Meal Plan</button></div>
+          <div id="mealOut" style="margin-top:12px" class="small muted">No meal plan yet.</div>
+        </section>
+
+        <section id="view-settings" class="card view" style="display:none">
+          <h3>Settings & Export</h3>
+          <div class="small">Export data (inventory, donations, volunteers) as JSON for backups or to migrate to a full database.</div>
+          <div style="display:flex;gap:8px;margin-top:10px"><button id="exportBtn" class="btn">Export JSON</button> <button id="importBtn" type="button">Import JSON (paste)</button></div>
+          <textarea id="importArea" style="margin-top:10px;display:none;height:120px"></textarea>
+        </section>
+      </div>
+
+      <aside>
+        <div class="card">
+          <h4>Quick Actions</h4>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+            <button id="quickUseNearExpiry">Use Near-expiry Items</button>
+            <button id="quickAddSample">Add Sample Data</button>
+            <button id="clearAllLocal">Clear Local Data</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h4>Notes / Health Tips</h4>
+          <div class="small">- Prioritize high-protein meals for vulnerable groups.<br>- Use near-expiry dairy in cooked dishes (soups, stews).<br>- Maintain temperature logs for perishable storage.</div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h4>Shortcuts</h4>
+          <div class="small"><strong>Barcode:</strong> Placeholder — integrate camera API for scanning.<br><strong>AI Nutritionist:</strong> Placeholder — integrate OpenAI or similar for natural language suggestions.</div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      Built for Enactus — prototype. You can copy, modify, and expand this single-file app. Suggestions: connect to Firebase/MongoDB and add authentication for multi-user use.
+    </footer>
+  </div>
+
+  <script>
+    // Simple single-file prototype using localStorage to persist data
+    const state = {
+      inventory: JSON.parse(localStorage.getItem('inventory')||'[]'),
+      volunteers: JSON.parse(localStorage.getItem('volunteers')||'[]'),
+      donations: JSON.parse(localStorage.getItem('donations')||'[]'),
+      activity: JSON.parse(localStorage.getItem('activity')||'[]')
+    }
+
+    // Navigation
+    document.querySelectorAll('#mainNav button').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        document.querySelectorAll('#mainNav button').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const view = btn.dataset.view;
+        document.querySelectorAll('.view').forEach(s=>s.style.display='none');
+        document.getElementById('view-'+view).style.display='block';
+        if(view==='inventory') renderInventory();
+        if(view==='recipes') renderIngredients();
+        if(view==='volunteers') renderVols();
+        if(view==='donations') renderDonations();
+        updateStats();
+      })
+    })
+
+    // Inventory functions
+    const inventoryTableBody = document.querySelector('#inventoryTable tbody');
+    function renderInventory(){
+      inventoryTableBody.innerHTML='';
+      state.inventory.forEach((it,idx)=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${it.name}</td><td>${it.cat}</td><td>${it.qty}</td><td>${it.weight}</td><td>${it.expiry||'—'}</td><td><button data-idx="${idx}">Use 1</button> <button data-del="${idx}">Delete</button></td>`;
+        inventoryTableBody.appendChild(tr);
+      })
+      inventoryTableBody.querySelectorAll('[data-idx]').forEach(b=>b.addEventListener('click',e=>{
+        const i=+e.target.dataset.idx; state.inventory[i].qty = Math.max(0,state.inventory[i].qty-1); saveState(); renderInventory(); pushActivity(`Used 1 ${state.inventory[i].name}`)
+      }))
+      inventoryTableBody.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',e=>{
+        const i=+e.target.dataset.del; pushActivity(`Removed ${state.inventory[i].name} from inventory`); state.inventory.splice(i,1); saveState(); renderInventory();
+      }))
+      checkExpiryAlerts();
+    }
+
+    document.getElementById('formAddItem').addEventListener('submit',e=>{
+      e.preventDefault();
+      const name = document.getElementById('itemName').value.trim();
+      if(!name) return;
+      const cat = document.getElementById('itemCat').value;
+      const qty = Number(document.getElementById('itemQty').value)||0;
+      const weight = Number(document.getElementById('itemWeight').value)||0;
+      const expiry = document.getElementById('itemExpiry').value || null;
+      // merge if exists
+      const existing = state.inventory.find(i=>i.name.toLowerCase()===name.toLowerCase() && i.expiry===expiry);
+      if(existing){ existing.qty += qty; existing.weight = Math.max(existing.weight,weight); }
+      else state.inventory.push({name,cat,qty,weight,expiry});
+      saveState(); renderInventory(); pushActivity(`Added ${qty} x ${name}`);
+      e.target.reset();
+    })
+
+    document.getElementById('clearInventory').addEventListener('click',()=>{ if(confirm('Clear inventory?')){ state.inventory=[]; saveState(); renderInventory(); } })
+
+    // Volunteers
+    function renderVols(){
+      const tbody = document.querySelector('#volTable tbody'); tbody.innerHTML='';
+      state.volunteers.forEach((v,idx)=>{
+        const tr=document.createElement('tr'); tr.innerHTML=`<td>${v.name}</td><td>${v.role}</td><td>${v.date||'—'}</td><td>${v.notes||''}</td><td><button data-del="${idx}">Remove</button></td>`;
+        tbody.appendChild(tr);
+      })
+      tbody.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',e=>{ const i=+e.target.dataset.del; pushActivity(`Removed volunteer ${state.volunteers[i].name}`); state.volunteers.splice(i,1); saveState(); renderVols(); }))
+      updateStats();
+    }
+
+    document.getElementById('formVolunteer').addEventListener('submit',e=>{
+      e.preventDefault(); const name=document.getElementById('volName').value||'Volunteer'; const role=document.getElementById('volRole').value; const date=document.getElementById('volDate').value; const notes=document.getElementById('volNotes').value; state.volunteers.push({name,role,date,notes}); saveState(); renderVols(); pushActivity(`Scheduled ${name} for ${date}`); e.target.reset();
+    })
+
+    // Donations
+    function renderDonations(){
+      const tbody = document.querySelector('#donTable tbody'); tbody.innerHTML='';
+      state.donations.forEach((d,idx)=>{
+        const tr=document.createElement('tr'); tr.innerHTML=`<td>${d.donor}</td><td>${d.item}</td><td>${d.qty}</td><td>${d.weight}</td><td>${d.date||'—'}</td>`; tbody.appendChild(tr);
+      })
+    }
+    document.getElementById('formDonation').addEventListener('submit',e=>{ e.preventDefault(); const donor=document.getElementById('donorName').value||'Anonymous'; const item=document.getElementById('donDesc').value||'Food'; const qty=Number(document.getElementById('donQty').value)||1; const weight=Number(document.getElementById('donWeight').value)||0; const date=document.getElementById('donDate').value||new Date().toISOString().slice(0,10); state.donations.push({donor,item,qty,weight,date}); saveState(); renderDonations(); pushActivity(`Logged donation ${item} (${qty}) from ${donor}`); // auto-add to inventory
+      state.inventory.push({name:item,cat:'Donated',qty,weight,expiry:null}); saveState(); renderInventory(); e.target.reset(); })
+
+    // Recipes (very simple rule-based suggestions)
+    function renderIngredients(){
+      const container = document.getElementById('ingredientList'); container.innerHTML='';
+      state.inventory.forEach((it,idx)=>{
+        const id = 'ing_'+idx; const div=document.createElement('div'); div.innerHTML=`<label><input type="checkbox" id="${id}" data-idx="${idx}"> ${it.name} (${it.qty})</label>`; container.appendChild(div);
+      })
+    }
+    document.getElementById('suggestRecipes').addEventListener('click',()=>{
+      const checked = Array.from(document.querySelectorAll('#ingredientList input:checked')).map(i=>state.inventory[+i.dataset.idx].name.toLowerCase());
+      const out = document.getElementById('recipesOut'); if(checked.length===0){ out.innerHTML='Select some ingredients to get suggestions.'; return; }
+      const suggestions = suggestRecipesFrom(checked); out.innerHTML = suggestions.map(s=>`<div style="margin-bottom:8px"><strong>${s.title}</strong><div class="small">${s.desc}</div></div>`).join('')
+    })
+
+    function suggestRecipesFrom(ings){
+      // small example recipe set
+      const library = [
+        {title:'Vegetable Stew',tags:['carrot','potato','onion','tomato'],desc:'Cook down veggies with spices; serve with rice or bread; good for children and elderly.'},
+        {title:'Protein Stir-fry',tags:['chicken','tofu','bell pepper','onion'],desc:'Quick stir-fry; balanced with protein and vegetables.'},
+        {title:'Fruit Salad',tags:['apple','banana','orange'],desc:'Fresh fruit mix — great for snack or dessert.'},
+        {title:'Hearty Soup',tags:['bread','tomato','carrot','lentil'],desc:'Blend of lentils and veggies; offers protein and fiber.'}
+      ];
+      // score recipes by matching tags
+      const scored = library.map(r=>{ const score = r.tags.reduce((s,t)=> s + (ings.includes(t)?1:0),0); return {...r,score};}).filter(r=>r.score>0).sort((a,b)=>b.score-a.score);
+      if(scored.length===0) return [{title:'Creative Idea',desc:'Use selected ingredients in a simple cooked dish: saute, season, combine with grain or soup base.'}];
+      return scored.slice(0,5);
+    }
+
+    // Nutrition & Meal Planner (simple heuristics)
+    document.getElementById('generateMeal').addEventListener('click',()=>{
+      const target = document.getElementById('planAudience').value;
+      // simplistic approach: include at least one protein, one veg, one carb
+      const names = state.inventory.map(i=>i.name.toLowerCase());
+      const proteins = names.filter(n=>['chicken','eggs','lentil','tofu','beans','fish','meat'].some(k=>n.includes(k)));
+      const veg = names.filter(n=>['carrot','potato','spinach','tomato','onion','pepper','cabbage'].some(k=>n.includes(k)));
+      const carbs = names.filter(n=>['rice','bread','pasta','potato','grain'].some(k=>n.includes(k)));
+      const out = document.getElementById('mealOut');
+      let plan = 'Suggested meal:\n';
+      if(proteins.length) plan += `Protein: ${proteins[0]}\n`;
+      if(veg.length) plan += `Veg: ${veg[0]}\n`;
+      if(carbs.length) plan += `Carb: ${carbs[0]||'Rice/Bread'}\n`;
+      if(!proteins.length && target==='Children') plan += 'Consider adding eggs or milk for protein.';
+      out.textContent = plan;
+      pushActivity('Generated a meal plan for '+target);
+    })
+
+    // Expiry alerts
+    function checkExpiryAlerts(){
+      const container = document.getElementById('expiryAlerts'); container.innerHTML='';
+      const today = new Date();
+      const near = state.inventory.filter(i=>i.expiry).filter(i=>{ const d=new Date(i.expiry); const diff=(d-today)/(1000*60*60*24); return diff<=3; });
+      if(near.length===0) { container.innerHTML='<div class="small muted">No near-expiry items.</div>'; return; }
+      near.forEach(n=>{
+        const div=document.createElement('div'); div.className='alert'; div.textContent = `${n.name} expires on ${n.expiry} — use soon.`; container.appendChild(div);
+      })
+    }
+
+    // Activity log
+    function pushActivity(msg){ state.activity.unshift({t:new Date().toISOString(),msg}); if(state.activity.length>50) state.activity.pop(); localStorage.setItem('activity',JSON.stringify(state.activity)); renderActivity(); updateStats(); }
+    function renderActivity(){ const el=document.getElementById('recentActivity'); if(state.activity.length===0) el.textContent='No activity yet.'; else el.innerHTML = state.activity.slice(0,6).map(a=>`<div class="small">${new Date(a.t).toLocaleString()}: ${a.msg}</div>`).join(''); }
+
+    // Stats
+    function updateStats(){ document.getElementById('statMeals').textContent = state.activity.filter(a=>a.msg.toLowerCase().includes('served')||a.msg.toLowerCase().includes('meal')).length; document.getElementById('statSaved').textContent = (state.inventory.reduce((s,i)=>s + (Number(i.weight)||0),0)).toFixed(2); document.getElementById('statVols').textContent = state.volunteers.length; }
+
+    // Save/load
+    function saveState(){ localStorage.setItem('inventory',JSON.stringify(state.inventory)); localStorage.setItem('volunteers',JSON.stringify(state.volunteers)); localStorage.setItem('donations',JSON.stringify(state.donations)); }
+
+    // Quick actions
+    document.getElementById('quickAddSample').addEventListener('click',()=>{
+      state.inventory.push({name:'Potato',cat:'Vegetable',qty:20,weight:5,expiry:null});
+      state.inventory.push({name:'Carrot',cat:'Vegetable',qty:10,weight:1,expiry:new Date(Date.now()+2*24*3600*1000).toISOString().slice(0,10)});
+      state.inventory.push({name:'Rice',cat:'Grain',qty:10,weight:8,expiry:null});
+      state.volunteers.push({name:'Aisha',role:'Cook',date:new Date().toISOString().slice(0,10),notes:''});
+      state.donations.push({donor:'Local Shop',item:'Leftover Bread',qty:5,weight:2,date:new Date().toISOString().slice(0,10)});
+      saveState(); renderInventory(); renderDonations(); renderVols(); pushActivity('Added sample data');
+    })
+    document.getElementById('clearAllLocal').addEventListener('click',()=>{ if(confirm('Clear ALL local data?')){ state.inventory=[]; state.volunteers=[]; state.donations=[]; state.activity=[]; saveState(); renderInventory(); renderVols(); renderDonations(); renderActivity(); updateStats(); } })
+    document.getElementById('quickUseNearExpiry').addEventListener('click',()=>{
+      const near = state.inventory.filter(i=>i.expiry).filter(i=>{ const d=new Date(i.expiry); const diff=(d-new Date())/(1000*60*60*24); return diff<=3; });
+      if(near.length===0) return alert('No near-expiry items');
+      near.forEach(i=>{ i.qty = Math.max(0,i.qty-1); pushActivity(`Used near-expiry ${i.name}`)}); saveState(); renderInventory();
+    })
+
+    // Export / import
+    document.getElementById('exportBtn').addEventListener('click',()=>{
+      const blob = new Blob([JSON.stringify({inventory:state.inventory,volunteers:state.volunteers,donations:state.donations},null,2)],{type:'application/json'});
+      const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='enactus-data.json'; a.click(); URL.revokeObjectURL(url);
+    })
+    document.getElementById('importBtn').addEventListener('click',()=>{
+      const area = document.getElementById('importArea'); area.style.display = area.style.display==='none'?'block':'none';
+      if(area.style.display==='block') { area.placeholder = 'Paste exported JSON here and click Import'; }
+    })
+    document.getElementById('importArea').addEventListener('keydown',e=>{ if(e.key==='Enter'&& (e.ctrlKey||e.metaKey)){ try{ const obj=JSON.parse(e.target.value); state.inventory=obj.inventory||state.inventory; state.volunteers=obj.volunteers||state.volunteers; state.donations=obj.donations||state.donations; saveState(); renderInventory(); renderVols(); renderDonations(); pushActivity('Imported data'); e.target.value=''; e.target.style.display='none'; }catch(err){ alert('Invalid JSON'); } } })
+
+    // Init
+    renderInventory(); renderDonations(); renderVols(); renderActivity(); updateStats(); checkExpiryAlerts();
+  </script>
+</body>
+</html>
